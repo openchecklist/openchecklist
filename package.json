@@ -1,0 +1,22 @@
+{
+  "name": "openchecklist",
+  "version": "0.0.0",
+  "description": "Open Checklist Development",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build":"npm run clean && npm run compile",
+    "compile":"node ./scripts/build.js",
+    "clean":"node ./scripts/clean.js dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openchecklist/openchecklist.git"
+  },
+  "author": "wandyezj",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/openchecklist/openchecklist/issues"
+  },
+  "homepage": "https://github.com/openchecklist/openchecklist#readme"
+}

@@ -1,0 +1,35 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Main
+
+on:
+# main branch CI
+  push:
+    branches: [ main ]
+# Run on pull request
+  pull_request:
+    types: [ opened, synchronize ]
+
+jobs:
+  build:
+    # Match Development Operating System
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        # Match Development Node Version
+        node-version: '16.x'
+    - name: Clean Install
+      run: npm ci
+# Check Environment
+    - name: Check
+      env:
+        BRANCH_NAME: ${{ github.ref }}
+      run: npm run check-environment --if-present
+
+# Build
+    - name: Build
+      run: npm run build --if-present
