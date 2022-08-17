@@ -16,7 +16,6 @@ const scripts = path.dirname(script);
  */
 const root = path.join(scripts, "..");
 
-
 const dist = path.join(root, "dist");
 const src = path.join(root, "src");
 
@@ -28,7 +27,7 @@ if (!fs.existsSync(dist)) {
 // build checklist
 
 // copy over checklist.
-const name = "checklist.html"
+const name = "checklist.html";
 
 const from = path.normalize(path.join(src, name));
 const to = path.normalize(path.join(dist, name));

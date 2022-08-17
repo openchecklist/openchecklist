@@ -5,9 +5,12 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "build":"npm run clean && npm run compile",
-    "compile":"node ./scripts/build.js",
-    "clean":"node ./scripts/clean.js dist"
+    "build": "npm run clean && npm run style-check && npm run compile",
+    "compile": "node ./scripts/build.js",
+    "clean": "node ./scripts/clean.js dist",
+    "style": "npm run prettier -- --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
+    "style-check": "npm run prettier -- --check \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
+    "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json"
   },
   "repository": {
     "type": "git",
@@ -18,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/openchecklist/openchecklist/issues"
   },
-  "homepage": "https://github.com/openchecklist/openchecklist#readme"
+  "homepage": "https://github.com/openchecklist/openchecklist#readme",
+  "dependencies": {
+    "prettier": "^2.7.1"
+  }
 }
