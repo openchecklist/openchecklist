@@ -1599,25 +1599,8 @@
             async function buttonSaveSnapshotToFileSvg() {
                 const configuration = getConfigurationSnapshot();
 
-                var snapshotSvgText = getConfigurationToTextSvg(configuration);
-
                 const filename = `${configuration.title}.svg`;
-                const text = snapshotSvgText;
-                const encoding = "data:image/svg+xml";
-                downloadFile({ filename, text, encoding });
-            }
-
-            /**
-             * button
-             * get snapshot of the current configurations answers and save to svg
-             */
-            async function buttonSaveSnapshotToFileSvg() {
-                const configuration = getConfigurationSnapshot();
-
-                var snapshotPng = getConfigurationToTextSvg(configuration);
-
-                const filename = `${configuration.title}.svg`;
-                const text = snapshotSvgText;
+                const text = await getConfigurationToTextSvg(configuration);
                 const encoding = "data:image/svg+xml";
                 downloadFile({ filename, text, encoding });
             }
@@ -1646,7 +1629,7 @@
                 const url = await getConfigurationToPng(configuration);
 
                 // already have a download URL
-                downloadFileUrl({ filename, url: text });
+                downloadFileUrl({ filename, url });
             }
 
             /**
