@@ -136,7 +136,7 @@ function visible(data) {
  * (string) => void
  * @returns
  */
-function updateHash(data, cspHashPlaceholder, {log}) {
+function updateHash(data, cspHashPlaceholder, { log }) {
     const scriptData = getScriptData(data);
 
     if (scriptData === undefined) {
@@ -255,7 +255,7 @@ place: ${cspHashPlaceholder}
     const fs = require("fs");
     const data = fs.readFileSync(filePathIn, { encoding: "utf-8" });
 
-    const dataUpdated = updateHash(data, cspHashPlaceholder, {log});
+    const dataUpdated = updateHash(data, cspHashPlaceholder, { log });
     //console.log(dataUpdated);
 
     fs.writeFileSync(filePathOut, dataUpdated, { encoding: "utf-8" });
