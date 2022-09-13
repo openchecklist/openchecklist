@@ -112,7 +112,9 @@ function getHash(data) {
  * @returns {string}
  */
 function getMetaContentSecurityPolicyTag(data) {
-    const delimiterCspStart = `<meta http-equiv="Content-Security-Policy" content=`;
+    const delimiterCspStart = `<meta
+            http-equiv="Content-Security-Policy"
+            content=`;
     const delimiterCspEnd = `>`;
     const csp = contentWithDelimiters(data, delimiterCspStart, delimiterCspEnd);
     return csp;
@@ -125,6 +127,86 @@ function getMetaContentSecurityPolicyTag(data) {
  */
 function visible(data) {
     return `----\n${data.replace(/ /g, ".")}\n----`;
+}
+
+/**
+ *
+ * @param {string} data
+ * @param {string} cspHashPlaceholder
+ * (string) => void
+ * @returns
+ */
+function updateHash(data, cspHashPlaceholder, { log }) {
+    const scriptData = getScriptData(data);
+
+    if (scriptData === undefined) {
+        throw new Error("Could not retrieve script data.");
+    }
+
+    // test file contents for openssl calculation
+    //const filePathJsOut = "checklist.js";
+    //fs.writeFileSync(filePathJsOut,scriptData);
+
+    // text
+    // first 80
+    //console.log(visible(scriptData.substring(0,80)));
+    //last 80
+    //console.log(visible(scriptData.substring(scriptData.length -80)));
+
+    // needs to be lf not cr/lf
+
+    let scriptHash = getHash(scriptData);
+
+    log(`Calculated Hash:
+${scriptHash}
+`);
+
+    // embed hash in the document (don't actually modify the original document that's dangerous!) Instead create a new document with the hash embedded
+
+    const csp = getMetaContentSecurityPolicyTag(data);
+    if (csp === undefined) {
+        throw new Error("ERROR: can not find meta content security policy tag");
+    }
+
+    // retrieve placeholder
+
+    let placeholder;
+
+    if (cspHashPlaceholder === undefined) {
+        const delimiterBefore = "script-src '";
+        const delimiterAfter = "'";
+        placeholder = contentBetweenDelimiters(csp, delimiterBefore, delimiterAfter);
+        if (placeholder === undefined || placeholder.length < 0) {
+            throw new Error(`unable to automatically discover placeholder`);
+        }
+        placeholder = `${delimiterBefore}${placeholder}${delimiterAfter}`;
+        scriptHash = `${delimiterBefore}${scriptHash}${delimiterAfter}`;
+    } else {
+        const cspHashPlaceholderPresent = csp.includes(cspHashPlaceholder);
+        if (!cspHashPlaceholderPresent) {
+            throw new Error(`no instance of csp placeholder [${cspHashPlaceholder}] for csp [${csp}]`);
+        }
+        placeholder = cspHashPlaceholder;
+    }
+
+    if (!csp.includes(placeholder)) {
+        throw new Error("Placeholder not present in csp");
+    }
+
+    const cspUpdated = csp.replaceAll(placeholder, scriptHash);
+
+    log(`Content Security Policy Meta Tag
+
+original:
+${csp}
+
+updated:
+${cspUpdated}
+`);
+
+    const dataUpdated = data.replace(csp, cspUpdated);
+
+    return dataUpdated;
 }
 
 /**
@@ -144,14 +226,26 @@ function main(args) {
         return 1;
     }
 
-    if (![2, 3].includes(args.length)) {
+    if (![2, 3, 4].includes(args.length)) {
         console.log(args);
-        console.log("usage: [file in]  [file out] [(optional)csp placeholder]");
+        console.log("usage: [--quiet] [file in] [file out] [(optional)csp placeholder]");
         return 1;
     }
 
+    let quiet = args[0] === "--quiet";
+    if (quiet) {
+        args = args.slice(1);
+    }
+
+    const log = (message) => {
+        if (quiet) {
+            return;
+        }
+        console.log(message);
+    };
+
     const [filePathIn, filePathOut, cspHashPlaceholder] = args;
-    console.log(`
+    log(`
 in: ${filePathIn}
 out: ${filePathOut}
 place: ${cspHashPlaceholder}
@@ -161,73 +255,11 @@ place: ${cspHashPlaceholder}
     const fs = require("fs");
     const data = fs.readFileSync(filePathIn, { encoding: "utf-8" });
 
-    const scriptData = getScriptData(data);
-
-    if (scriptData === undefined) {
-        console.error("Could not retrieve script data.");
-        return 1;
-    }
-
-    // test file contents for openssl calculation
-    //const filePathJsOut = "checklist.js";
-    //fs.writeFileSync(filePathJsOut,scriptData);
-
-    // text
-    // first 80
-    //console.log(visible(scriptData.substring(0,80)));
-    //last 80
-    //console.log(visible(scriptData.substring(scriptData.length -80)));
-
-    // needs to be lf not cr/lf
-
-    const scriptHash = getHash(scriptData);
-
-    console.log(`Calculated Hash:
-${scriptHash}
-`);
-
-    // embed hash in the document (don't actually modify the original document that's dangerous!) Instead create a new document with the hash embedded
-
-    const csp = getMetaContentSecurityPolicyTag(data);
-    if (csp === undefined) {
-        console.log("ERROR: can not find meta content security policy tag");
-        return 1;
-    }
-
-    // retrieve placeholder
-
-    let placeholder;
-
-    if (cspHashPlaceholder === undefined) {
-        placeholder = contentBetweenDelimiters(csp, "script-src '", "'");
-        if (placeholder.length < 0) {
-            console.log(`unable to automatically discover placeholder`);
-            return 1;
-        }
-    } else {
-        const cspHashPlaceholderPresent = csp.includes(cspHashPlaceholder);
-        if (!cspHashPlaceholderPresent) {
-            console.log(`no instance of csp placeholder [${cspHashPlaceholder}] for csp [${csp}]`);
-            return 1;
-        }
-        placeholder = cspHashPlaceholder;
-    }
-
-    const cspUpdated = csp.replaceAll(placeholder, scriptHash);
-
-    console.log(`Content Security Policy Meta Tag
-
-original:
-${csp}
-
-updated:
-${cspUpdated}
-`);
-
-    const dataUpdated = data.replace(csp, cspUpdated);
+    const dataUpdated = updateHash(data, cspHashPlaceholder, { log });
+    //console.log(dataUpdated);
 
     fs.writeFileSync(filePathOut, dataUpdated, { encoding: "utf-8" });
-    console.log(`wrote update to:
+    log(`wrote update to:
 ${filePathOut}`);
 
     return 0;
