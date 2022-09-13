@@ -30,9 +30,9 @@
     },
     "homepage": "https://github.com/openchecklist/openchecklist#readme",
     "dependencies": {
-        "prettier": "^2.7.1"
     },
     "devDependencies": {
+        "prettier": "^2.7.1",
         "@types/node": "^18.7.17"
     }
 }
