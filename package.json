@@ -1,32 +1,38 @@
 {
-  "name": "openchecklist",
-  "version": "0.0.0",
-  "description": "Open Checklist Development",
-  "private": true,
-  "main": "index.js",
-  "scripts": {
-    "build": "npm run clean && npm run style-check && npm run compile",
-    "clean": "node ./scripts/clean.js dist",
-    "compile": "node ./scripts/build.js && npm run embed-script-hash",
-    "embed-script-hash":"node ./scripts/embed-script-hash.js --quiet ./dist/checklist.html ./dist/checklist.html",
-    "style": "npm run prettier -- --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
-    "style-check": "npm run prettier -- --check \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
-    "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/openchecklist/openchecklist.git"
-  },
-  "author": "wandyezj",
-  "license": "Unlicense",
-  "bugs": {
-    "url": "https://github.com/openchecklist/openchecklist/issues"
-  },
-  "homepage": "https://github.com/openchecklist/openchecklist#readme",
-  "dependencies": {
-    "prettier": "^2.7.1"
-  },
-  "devDependencies": {
-    "@types/node": "^18.7.17"
-  }
+    "name": "openchecklist",
+    "version": "0.0.0",
+    "description": "Open Checklist Development",
+    "private": true,
+    "engines": {
+        "node": ">=16.17",
+        "npm": ">=8.15"
+    },
+    "scripts": {
+        "build": "npm run clean && npm run style-check && npm run compile",
+        "clean": "node ./scripts/clean.js dist",
+        "compile": "node ./scripts/build.js && npm run embed-script-hash",
+        "embed-script-hash": "node ./scripts/embed-script-hash.js --quiet ./dist/checklist.html ./dist/checklist.html",
+        "style": "npm run prettier -- --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
+        "style-check": "npm run prettier -- --check \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
+        "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/openchecklist/openchecklist.git"
+    },
+    "author": {
+        "name": "wandyezj",
+        "url": "http://wandyez.github.io/"
+    },
+    "license": "Unlicense",
+    "bugs": {
+        "url": "https://github.com/openchecklist/openchecklist/issues"
+    },
+    "homepage": "https://github.com/openchecklist/openchecklist#readme",
+    "dependencies": {
+        "prettier": "^2.7.1"
+    },
+    "devDependencies": {
+        "@types/node": "^18.7.17"
+    }
 }
