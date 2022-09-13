@@ -22,14 +22,23 @@ jobs:
       with:
         # Match Development Node Version
         node-version: '16.x'
+
     - name: Clean Install
       run: npm ci
+
 # Check Environment
     - name: Check
       env:
         BRANCH_NAME: ${{ github.ref }}
       run: npm run check-environment --if-present
 
-# Build
-    - name: Build
-      run: npm run build --if-present
+# 'npm run build' broken into separate steps
+
+    - name: clean
+      run: npm run clean
+
+    - name: style
+      run: npm run style-check
+
+    - name: compile
+      run: npm run compile
