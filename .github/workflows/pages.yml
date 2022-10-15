@@ -43,9 +43,9 @@ jobs:
       run: npm run compile
 
     - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/upload-pages-artifact
-        path: dist/
+      id: deployment
+      uses: actions/upload-pages-artifact
+      path: dist/
 
   # Deploy job
   deploy:
