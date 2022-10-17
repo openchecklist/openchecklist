@@ -48,7 +48,8 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/upload-pages-artifact@v1
-      path: dist/
+      with:
+        path: dist/
 
   # Deploy job
   deploy:
