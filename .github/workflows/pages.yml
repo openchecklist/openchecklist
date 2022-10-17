@@ -6,7 +6,10 @@ name: Pages
 on:
   # main branch CI
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - wandyezj/pages-workflow
+
 
   # Manual
   workflow_dispatch:
