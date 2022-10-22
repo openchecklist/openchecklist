@@ -1,5 +1,6 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#creating-a-custom-github-actions-workflow-to-publish-your-site
 
 name: Pages
 
@@ -15,41 +16,46 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build:
-    # Match Development Operating System
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js
-      uses: actions/setup-node@v2
-      with:
-        # Match Development Node Version
-        node-version: '16.x'
+    uses: ./.github/workflows/build.yml
+    #secrets: inherit
 
-    - name: Clean Install
-      run: npm ci
+  # build:
+  #   # Match Development Operating System
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Use Node.js
+  #     uses: actions/setup-node@v2
+  #     with:
+  #       # Match Development Node Version
+  #       node-version: '16.x'
 
-    # Check Environment
-    - name: Check
-      env:
-        BRANCH_NAME: ${{ github.ref }}
-      run: npm run check-environment --if-present
+  #   - name: Clean Install
+  #     run: npm ci
 
-    # 'npm run build' broken into separate steps
-    - name: clean
-      run: npm run clean
+  #   # Check Environment
+  #   - name: Check
+  #     env:
+  #       BRANCH_NAME: ${{ github.ref }}
+  #     run: npm run check-environment --if-present
 
-    - name: style
-      run: npm run style-check
+  #   # 'npm run build' broken into separate steps
+  #   - name: clean
+  #     run: npm run clean
 
-    - name: compile
-      run: npm run compile
+  #   - name: style
+  #     run: npm run style-check
 
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: dist/
+  #   - name: compile
+  #     run: npm run compile
+  # upload:
+  #   - name: Upload static files as artifact
+  #     id: deployment
+  #     uses: actions/upload-pages-artifact@v1
+  #     with:
+  #       path: dist/
 
   # Deploy job
   deploy:
