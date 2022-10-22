@@ -4,10 +4,11 @@
 name: Main
 
 on:
-# main branch CI
+  # main branch CI
   push:
-    branches: [ main ]
-# Run on pull request
+    branches:
+      - 'main'
+  # Run on pull request
   pull_request:
     types: [ opened, synchronize ]
 
@@ -26,13 +27,13 @@ jobs:
     - name: Clean Install
       run: npm ci
 
-# Check Environment
+    # Check Environment
     - name: Check
       env:
         BRANCH_NAME: ${{ github.ref }}
       run: npm run check-environment --if-present
 
-# 'npm run build' broken into separate steps
+    # 'npm run build' broken into separate steps
 
     - name: clean
       run: npm run clean

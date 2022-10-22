@@ -3,7 +3,14 @@
 name: Build
 
 on:
+  # Reusable Workflow
   workflow_call:
+    inputs:
+      # Upload built files as static artifact
+      upload:
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   build:
@@ -35,3 +42,9 @@ jobs:
 
     - name: compile
       run: npm run compile
+
+    - name: Upload static files as artifact
+      if: inputs.upload
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: dist/

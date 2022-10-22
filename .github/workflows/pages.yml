@@ -8,8 +8,8 @@ on:
   # main branch CI
   push:
     branches:
-      - main
-      - wandyezj/pages-workflow
+      - 'main'
+      - 'wandyezj/pages-workflow'
 
 
   # Manual
@@ -19,6 +19,8 @@ jobs:
 
   build:
     uses: ./.github/workflows/build.yml
+    with:
+      upload: true
     #secrets: inherit
 
   # build:
