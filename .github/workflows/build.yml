@@ -1,0 +1,51 @@
+# Build Job to be used between main and pages workflows
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Build
+
+on:
+  # Reusable Workflow
+  workflow_call:
+    inputs:
+      # Upload built files as static artifact
+      upload:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    # Match Development Operating System
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        # Match Development Node Version
+        node-version: '16.x'
+
+    - name: Clean Install
+      run: npm ci
+
+    # Check Environment
+    - name: Check
+      env:
+        BRANCH_NAME: ${{ github.ref }}
+      run: npm run check-environment --if-present
+
+    # 'npm run build' broken into separate steps
+    - name: clean
+      run: npm run clean
+
+    - name: style
+      run: npm run style-check
+
+    - name: compile
+      run: npm run compile
+
+    - name: Upload static files as artifact
+      if: inputs.upload
+      uses: actions/upload-pages-artifact@v1
+      with:
+        path: dist/
