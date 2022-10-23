@@ -1,22 +1,24 @@
 # Main workflow to keep branches clean
 
 name: Main
-run-name: ${{ github.workflow }} for ${{ github.ref_name }} trigger ${{ github.event_name }} by ${{ github.actor }}
 
 on:
-  # main branch CI
+
   push:
     branches:
+      # main branch CI
       - 'main'
+      # Any branch
+      - '*'
 
   # Run on pull request
   pull_request:
     types: [ opened, synchronize ]
 
 # Cancel current workflow if there is already one running
-# concurrency: 
-#   group: ${{ github.workflow }} ${{ github.ref }}
-#   cancel-in-progress: true
+concurrency: 
+  group: ${{ github.workflow }} ${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
