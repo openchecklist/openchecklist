@@ -12,7 +12,12 @@ on:
   pull_request:
     types: [ opened, synchronize ]
 
+# Cancel current workflow if there is already one running
+# concurrency: 
+#   group: ${{ github.workflow }} ${{ github.ref }}
+#   cancel-in-progress: true
+
 jobs:
   build:
-    uses: ./.github/workflows/build.yml
+    uses: ./.github/workflows/templates/build.yml
 
