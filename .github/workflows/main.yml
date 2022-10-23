@@ -1,7 +1,7 @@
 # Main workflow to keep branches clean
 
 name: Main
-run-name: ${{ github.workflow }} for ${{ github.ref }}
+run-name: ${{ github.workflow }} for ${{ github.ref_name }} trigger ${{ github.event_name }} by ${{ github.actor }}
 
 on:
   # main branch CI
