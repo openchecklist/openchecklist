@@ -1,6 +1,7 @@
 # Main workflow to keep branches clean
 
 name: Main
+run-name: ${{ github.workflow }} for ${{ github.ref }}
 
 on:
   # main branch CI
