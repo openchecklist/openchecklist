@@ -27,7 +27,7 @@ if (!fs.existsSync(dist)) {
 // build checklist
 
 // copy over checklist.
-const name = "checklist.html";
+const name = "index.html";
 
 const from = path.normalize(path.join(src, name));
 const to = path.normalize(path.join(dist, name));

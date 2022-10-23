@@ -13,6 +13,10 @@ on:
   # Manual
   workflow_dispatch:
 
+# Only allow one pages workflow to run at a time
+concurrency: 
+  group: ${{ github.workflow }}
+
 jobs:
 
   build:
