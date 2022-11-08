@@ -12,7 +12,7 @@
     "clean": "node ./scripts/clean.js dist",
     "compile": "node ./scripts/build.js && npm run embed-script-hash",
     "embed-script-hash": "node ./scripts/embed-script-hash.js --quiet ./dist/index.html ./dist/index.html",
-    "style": "npm run prettier -- --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
+    "style": "npm run prettier -- --write \"@(src|tests|scripts)/**/*.@(ts|js|md|html|css|json)\"",
     "style-check": "npm run prettier -- --check \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
     "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json"
   },
