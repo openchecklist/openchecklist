@@ -14,7 +14,10 @@
     "embed-script-hash": "node ./scripts/embed-script-hash.js --quiet ./dist/index.html ./dist/index.html",
     "style": "npm run prettier -- --write \"@(src|tests|scripts)/**/*.@(ts|js|md|html|css|json)\"",
     "style-check": "npm run prettier -- --check \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
-    "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json"
+    "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json",
+    "playwright-install": "./node_modules/.bin/playwright install --with-deps chromium",
+    "playwright-test":"./node_modules/.bin/playwright test",
+    "playwright-report": "./node_modules/.bin/playwright show-report"
   },
   "repository": {
     "type": "git",
@@ -32,6 +35,7 @@
   "devDependencies": {
     "@playwright/test": "^1.27.1",
     "@types/node": "^18.7.17",
+    "playwright": "^1.27.1",
     "prettier": "^2.7.1"
   }
 }
