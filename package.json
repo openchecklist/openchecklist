@@ -15,7 +15,7 @@
     "style": "./node_modules/.bin/prettier --config ./config/prettier.json  --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
     "style-check": "./node_modules/.bin/prettier --config ./config/prettier.json  --check \"@(src|test)/**/*.@(ts|js|md|html|css|json)\"",
     "playwright-install": "./node_modules/.bin/playwright install --with-deps chromium",
-    "playwright-test":"./node_modules/.bin/playwright test --config ./config/playwright.ts",
+    "playwright-test":"./node_modules/.bin/playwright test --config ./config/playwright.config.ts",
     "playwright-report": "./node_modules/.bin/playwright show-report"
   },
   "repository": {

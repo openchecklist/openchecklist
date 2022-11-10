@@ -8,7 +8,8 @@ const mainPageUrl = "https://openchecklist.github.io/";
 /**
  * Local generated page
  */
-const mainPageLocalDistData = fs.readFileSync("./dist/index.html");
+const mainPageLocalDistDataPath = path.resolve("./../dist/index.html");
+const mainPageLocalDistData = fs.readFileSync(mainPageLocalDistDataPath);
 
 /**
  * true - uses local dist for testing
