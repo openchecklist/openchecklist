@@ -48,7 +48,7 @@ test("homepage has title and links to intro page", async ({ page }) => {
 
     selectors.setTestIdAttribute("id");
 
-    const tempDirectory = path.join(".", "temp");
+    const tempDirectory = path.resolve(path.join("..", "temp"));
 
     // recreate temp directory
     fs.rmSync(tempDirectory, { force: true, recursive: true });
