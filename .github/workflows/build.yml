@@ -6,7 +6,14 @@ name: Build
 on:
   # Reusable Workflow
   workflow_call:
+
     inputs:
+      # Run end to end tests
+      test:
+        required: false
+        type: boolean
+        default: false
+
       # Upload built files as static artifact
       upload:
         required: false
@@ -15,6 +22,7 @@ on:
 
 jobs:
   build:
+    timeout-minutes: 10
     # Match Development Operating System
     runs-on: ubuntu-latest
     steps:
@@ -49,3 +57,19 @@ jobs:
       uses: actions/upload-pages-artifact@v1
       with:
         path: dist/
+
+    ## end to end tests
+    - name: Install Playwright Browsers
+      if: inputs.test
+      run: npm run playwright-install
+
+    - name: Run Playwright tests
+      if: inputs.test
+      run: npm run playwright-test
+
+    - uses: actions/upload-artifact@v3
+      if: inputs.test
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30

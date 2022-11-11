@@ -1,38 +1,40 @@
 {
-    "name": "openchecklist",
-    "version": "0.0.0",
-    "description": "Open Checklist Development",
-    "private": true,
-    "engines": {
-        "node": ">=16.17",
-        "npm": ">=8.15"
-    },
-    "scripts": {
-        "build": "npm run clean && npm run style-check && npm run compile",
-        "clean": "node ./scripts/clean.js dist",
-        "compile": "node ./scripts/build.js && npm run embed-script-hash",
-        "embed-script-hash": "node ./scripts/embed-script-hash.js --quiet ./dist/index.html ./dist/index.html",
-        "style": "npm run prettier -- --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
-        "style-check": "npm run prettier -- --check \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
-        "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/openchecklist/openchecklist.git"
-    },
-    "author": {
-        "name": "wandyezj",
-        "url": "http://wandyez.github.io/"
-    },
-    "license": "Unlicense",
-    "bugs": {
-        "url": "https://github.com/openchecklist/openchecklist/issues"
-    },
-    "homepage": "https://github.com/openchecklist/openchecklist#readme",
-    "dependencies": {
-    },
-    "devDependencies": {
-        "prettier": "^2.7.1",
-        "@types/node": "^18.7.17"
-    }
+  "name": "openchecklist",
+  "version": "0.0.0",
+  "description": "Open Checklist Development",
+  "private": true,
+  "engines": {
+    "node": ">=16.17",
+    "npm": ">=8.15"
+  },
+  "scripts": {
+    "build": "npm run clean && npm run style-check && npm run compile",
+    "clean": "node ./scripts/clean.js dist",
+    "compile": "node ./scripts/build.js && npm run embed-script-hash",
+    "embed-script-hash": "node ./scripts/embed-script-hash.js --quiet ./dist/index.html ./dist/index.html",
+    "style": "./node_modules/.bin/prettier --config ./config/prettier.json  --write \"@(src|tests|scripts)/**/*.@(ts|js|md|html|css|json)\"",
+    "style-check": "./node_modules/.bin/prettier --config ./config/prettier.json  --check \"@(src|tests|scripts)/**/*.@(ts|js|md|html|css|json)\"",
+    "playwright-install": "./node_modules/.bin/playwright install --with-deps chromium",
+    "playwright-test":"./node_modules/.bin/playwright test --config ./config/playwright.config.ts",
+    "playwright-report": "./node_modules/.bin/playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openchecklist/openchecklist.git"
+  },
+  "author": {
+    "name": "wandyezj",
+    "url": "http://wandyez.github.io/"
+  },
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/openchecklist/openchecklist/issues"
+  },
+  "homepage": "https://github.com/openchecklist/openchecklist#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.27.1",
+    "@types/node": "^18.7.17",
+    "playwright": "^1.27.1",
+    "prettier": "^2.7.1"
+  }
 }
