@@ -6,7 +6,14 @@ name: Build
 on:
   # Reusable Workflow
   workflow_call:
+
     inputs:
+      # Run end to end tests
+      test:
+        required: false
+        type: boolean
+        default: false
+
       # Upload built files as static artifact
       upload:
         required: false
@@ -49,3 +56,19 @@ jobs:
       uses: actions/upload-pages-artifact@v1
       with:
         path: dist/
+
+    ## End to End tests
+    - name: Install Playwright Browsers
+      if: inputs.test
+      run: npm run playwright-install
+
+    - name: Run Playwright tests
+      if: inputs.test
+      run: npm run playwright-test
+
+    - uses: actions/upload-artifact@v3
+      if: inputs.test
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
