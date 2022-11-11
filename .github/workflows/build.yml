@@ -22,6 +22,7 @@ on:
 
 jobs:
   build:
+    timeout-minutes: 10
     # Match Development Operating System
     runs-on: ubuntu-latest
     steps:
@@ -57,7 +58,7 @@ jobs:
       with:
         path: dist/
 
-    ## End to End tests
+    ## end to end tests
     - name: Install Playwright Browsers
       if: inputs.test
       run: npm run playwright-install
