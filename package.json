@@ -12,8 +12,8 @@
     "clean": "node ./scripts/clean.js dist",
     "compile": "node ./scripts/build.js && npm run embed-script-hash",
     "embed-script-hash": "node ./scripts/embed-script-hash.js --quiet ./dist/index.html ./dist/index.html",
-    "style": "./node_modules/.bin/prettier --config ./config/prettier.json  --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
-    "style-check": "./node_modules/.bin/prettier --config ./config/prettier.json  --check \"@(src|test)/**/*.@(ts|js|md|html|css|json)\"",
+    "style": "./node_modules/.bin/prettier --config ./config/prettier.json  --write \"@(src|tests|scripts)/**/*.@(ts|js|md|html|css|json)\"",
+    "style-check": "./node_modules/.bin/prettier --config ./config/prettier.json  --check \"@(src|tests|scripts)/**/*.@(ts|js|md|html|css|json)\"",
     "playwright-install": "./node_modules/.bin/playwright install --with-deps chromium",
     "playwright-test":"./node_modules/.bin/playwright test --config ./config/playwright.config.ts",
     "playwright-report": "./node_modules/.bin/playwright show-report"

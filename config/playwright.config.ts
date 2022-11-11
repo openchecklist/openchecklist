@@ -8,7 +8,7 @@ import path from 'path';
  */
 // require('dotenv').config();
 
-const testDir = path.resolve('./../tests');
+const testDir = path.resolve('..', 'tests');
 
 /**
  * See https://playwright.dev/docs/test-configuration.
