@@ -8,13 +8,24 @@ import path from 'path';
  */
 // require('dotenv').config();
 
-const testDir = path.resolve('..', 'tests');
+//const testDir = path.resolve('..', 'tests');
+
+// extension requires
+const testDirExtension = path.resolve('..', 'tests');
+
+// command line requires
+const testDirCmd = path.resolve('tests');
+
+const isCmd = true;
+
+const testDir = isCmd ? testDirCmd : testDirExtension;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 const config: PlaywrightTestConfig = {
   testDir,
+
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   expect: {

@@ -4,16 +4,43 @@ import path from "path";
 
 const mainPageUrl = "https://openchecklist.github.io/";
 
+function getRootDirectory() {
+
+    const paths = [".", ".."];
+
+    for(const p of paths) {
+        const test = path.resolve(p, "src");
+        if (fs.existsSync(test)){
+            return p;
+        }
+    }
+
+    throw new Error("cannot find root directory");
+}
+
 /**
  * Local generated page from build
  */
-const mainPageLocalDistDataPath = path.resolve("./../dist/index.html");
-const mainPageLocalDistData = fs.readFileSync(mainPageLocalDistDataPath);
+const mainPageLocalDistDataPath = path.resolve(
+    getRootDirectory(), 
+    "dist", "index.html");
+
+function getLocalDistIndexData() {
+    if (!fs.existsSync(mainPageLocalDistDataPath)) {
+        throw new Error(`cannot find mainPageLocalDistDataPath`)
+    }
+
+    const mainPageLocalDistData = fs.readFileSync(mainPageLocalDistDataPath);
+    return mainPageLocalDistData;
+}
+
 
 /**
  * Temp directory for downloads
  */
-const downloadDirectory = path.resolve(path.join("..", "temp"));
+const downloadDirectory = path.resolve(
+    getRootDirectory(), 
+    "temp");
 
 /**
  * true - uses local dist for testing
@@ -45,28 +72,28 @@ test.describe("download buttons", () => {
         recreateDirectory(downloadDirectory);
     });
 
-    test.beforeEach(async ({}) => {
+    test.beforeEach(async () => {
         selectors.setTestIdAttribute("id");
     });
 
     test("md", async ({ browser }) => {
-        testDownloadButton(browser, idButtonSaveFileMd);
+        await testDownloadButton(browser, idButtonSaveFileMd);
     });
 
     test("json", async ({ browser }) => {
-        testDownloadButton(browser, idButtonSaveFileJson);
+        await testDownloadButton(browser, idButtonSaveFileJson);
     });
 
     test("txt", async ({ browser }) => {
-        testDownloadButton(browser, idButtonSaveFileTxt);
+        await testDownloadButton(browser, idButtonSaveFileTxt);
     });
 
     test("png", async ({ browser }) => {
-        testDownloadButton(browser, idButtonSaveFilePng);
+        await testDownloadButton(browser, idButtonSaveFilePng);
     });
 
     test("svg", async ({ browser }) => {
-        testDownloadButton(browser, idButtonSaveFileSvg);
+        await testDownloadButton(browser, idButtonSaveFileSvg);
     });
 });
 
@@ -95,7 +122,7 @@ async function navigateToMainPage(browser: Browser): Promise<Page> {
         // interceptor to replace content of the page
         page.route(mainPageUrl, (route, request) => {
             route.fulfill({
-                body: mainPageLocalDistData,
+                body: getLocalDistIndexData(),
             });
         });
     }
