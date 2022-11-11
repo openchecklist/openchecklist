@@ -1,6 +1,7 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
 import path from 'path';
+import * as fs from 'fs';
 
 /**
  * Read environment variables from file.
@@ -8,7 +9,7 @@ import path from 'path';
  */
 // require('dotenv').config();
 
-//const testDir = path.resolve('..', 'tests');
+// path is based on the current working directory which is different between the extension and command line.
 
 // extension requires
 const testDirExtension = path.resolve('..', 'tests');
@@ -16,7 +17,8 @@ const testDirExtension = path.resolve('..', 'tests');
 // command line requires
 const testDirCmd = path.resolve('tests');
 
-const isCmd = true;
+// Decide based on what cwd is.
+const isCmd = fs.existsSync(testDirCmd);
 
 const testDir = isCmd ? testDirCmd : testDirExtension;
 
