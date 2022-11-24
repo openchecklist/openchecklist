@@ -1,46 +1,9 @@
 import { test, expect, selectors, Page, Browser } from "@playwright/test";
 import * as fs from "fs";
 import path from "path";
-
-const mainPageUrl = "https://openchecklist.github.io/";
-
-function getRootDirectory() {
-    const paths = [".", ".."];
-
-    for (const p of paths) {
-        const test = path.resolve(p, "src");
-        if (fs.existsSync(test)) {
-            return p;
-        }
-    }
-
-    throw new Error("cannot find root directory");
-}
-
-/**
- * Local generated page from build
- */
-const mainPageLocalDistDataPath = path.resolve(getRootDirectory(), "dist", "index.html");
-
-function getLocalDistIndexData() {
-    if (!fs.existsSync(mainPageLocalDistDataPath)) {
-        throw new Error(`cannot find mainPageLocalDistDataPath`);
-    }
-
-    const mainPageLocalDistData = fs.readFileSync(mainPageLocalDistDataPath);
-    return mainPageLocalDistData;
-}
-
-/**
- * Temp directory for downloads
- */
-const downloadDirectory = path.resolve(getRootDirectory(), "temp");
-
-/**
- * true - uses local dist for testing
- * false - point to production url
- */
-const useLocalDist = true;
+import { navigateToMainPage } from "./navigateToMainPage";
+import { recreateDirectory } from "./recreateDirectory";
+import { getTempDirectory } from "./getTempDirectory";
 
 test("navigates to correct page title", async ({ browser }) => {
     const page = await navigateToMainPage(browser);
@@ -54,13 +17,19 @@ const idButtonSaveFileTxt = "button_save_file_text";
 const idButtonSaveFilePng = "button_save_file_png";
 const idButtonSaveFileSvg = "button_save_file_svg";
 
-async function testDownloadButton(browser: Browser, id: string) {
-    const page = await navigateToMainPage(browser);
+function setTestId() {
     selectors.setTestIdAttribute("id");
-    await testDownloadButtonClick(page, id, downloadDirectory);
+}
+
+async function testDownloadButton(browser: Browser, downloadDirectory: string, id: string) {
+    const page = await navigateToMainPage(browser);
+    setTestId();
+    return await downloadButtonClick(page, id, downloadDirectory);
 }
 
 test.describe("download buttons", () => {
+    const tempDirectory = getTempDirectory();
+    const downloadDirectory = path.join(tempDirectory, "download buttons");
     test.beforeAll(async () => {
         // recreate temp directory
         recreateDirectory(downloadDirectory);
@@ -71,63 +40,58 @@ test.describe("download buttons", () => {
     });
 
     test("md", async ({ browser }) => {
-        await testDownloadButton(browser, idButtonSaveFileMd);
+        await testDownloadButton(browser, downloadDirectory, idButtonSaveFileMd);
     });
 
     test("json", async ({ browser }) => {
-        await testDownloadButton(browser, idButtonSaveFileJson);
+        await testDownloadButton(browser, downloadDirectory, idButtonSaveFileJson);
     });
 
     test("txt", async ({ browser }) => {
-        await testDownloadButton(browser, idButtonSaveFileTxt);
+        await testDownloadButton(browser, downloadDirectory, idButtonSaveFileTxt);
     });
 
     test("png", async ({ browser }) => {
-        await testDownloadButton(browser, idButtonSaveFilePng);
+        await testDownloadButton(browser, downloadDirectory, idButtonSaveFilePng);
     });
 
     test("svg", async ({ browser }) => {
-        await testDownloadButton(browser, idButtonSaveFileSvg);
+        await testDownloadButton(browser, downloadDirectory, idButtonSaveFileSvg);
     });
 });
 
-/**
- * deletes directory and everything in it and then recreates it.
- * @param directoryPath
- */
-function recreateDirectory(directoryPath: string): void {
-    fs.rmSync(directoryPath, { force: true, recursive: true });
-    if (fs.existsSync(directoryPath)) {
-        throw new Error(`directory still exists ${directoryPath}`);
-    }
-    fs.mkdirSync(directoryPath);
-    if (!fs.existsSync(directoryPath)) {
-        throw new Error(`directory does not ${directoryPath}`);
-    }
-}
+test.describe("load", () => {
+    const tempDirectory = getTempDirectory();
+    const downloadDirectory = path.join(tempDirectory, "load");
+    test.beforeAll(async () => {
+        // recreate temp directory
+        recreateDirectory(downloadDirectory);
+    });
 
-async function navigateToMainPage(browser: Browser): Promise<Page> {
-    // Create a separate browser context for each test
-    const context = await browser.newContext();
-    const page = await context.newPage();
+    test("md", async ({ browser }) => {
+        const inputFileId = "input_load_file";
+        setTestId();
+        const page = await navigateToMainPage(browser);
+        const button = page.getByTestId(inputFileId);
 
-    // redirect to local data
-    if (useLocalDist) {
-        // interceptor to replace content of the page
-        page.route(mainPageUrl, (route, request) => {
-            route.fulfill({
-                body: getLocalDistIndexData(),
-            });
-        });
-    }
+        // really want to test simple modification to the file
 
-    await page.goto(mainPageUrl);
+        const fileChooserPromise = page.waitForEvent("filechooser");
 
-    // Check that the page is the right one
-    await expect(page).toHaveTitle("Checklist");
+        await button.click();
 
-    return page;
-}
+        const fileChooser = await fileChooserPromise;
+
+        // download file
+        const filePath = await downloadButtonClick(page, idButtonSaveFileSvg, downloadDirectory);
+
+        // uokia
+        await fileChooser.setFiles(filePath);
+
+        // How to check that the file was uploaded successfully?
+        // What should happen?
+    });
+});
 
 /**
  * Tests the download file button
@@ -138,7 +102,7 @@ async function navigateToMainPage(browser: Browser): Promise<Page> {
  * @param tempDirectory
  * @returns
  */
-async function testDownloadButtonClick(page: Page, id: string, tempDirectory: string) {
+async function downloadButtonClick(page: Page, id: string, tempDirectory: string) {
     const button = page.getByTestId(id); // .locator(`id='${id}'`);
 
     // Start waiting for the download
