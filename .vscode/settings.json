@@ -39,5 +39,14 @@
         "extends": "./config/markdownlint.json"
     },
 
-    "cSpell.words": ["INKSCAPE", "linebreak", "markdownlint", "msedge", "openchecklist", "prettierrc", "viewports"]
+    "cSpell.words": [
+        "filechooser",
+        "INKSCAPE",
+        "linebreak",
+        "markdownlint",
+        "msedge",
+        "openchecklist",
+        "prettierrc",
+        "viewports"
+    ]
 }
