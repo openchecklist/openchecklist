@@ -26,21 +26,26 @@ jobs:
     # Match Development Operating System
     runs-on: ubuntu-latest
     steps:
+
+    # Setup
     - uses: actions/checkout@v3
+  
     - name: Use Node.js
       uses: actions/setup-node@v3
       with:
         # Match Development Node Version
-        node-version: '16.x'
+        node-version: '18.x'
 
-    - name: Clean Install
+    # Tool Versions
+    - name: Node Version
+      run: node --version
+
+    - name: NPM Version
+      run: npm --version
+
+    # Package Setup
+    - name: clean install
       run: npm ci
-
-    # Check Environment
-    - name: Check
-      env:
-        BRANCH_NAME: ${{ github.ref }}
-      run: npm run check-environment --if-present
 
     # 'npm run build' broken into separate steps
     - name: clean
