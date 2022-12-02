@@ -85,7 +85,7 @@ test.describe("load", () => {
         // download file
         const filePath = await downloadButtonClick(page, idButtonSaveFileSvg, downloadDirectory);
 
-        // uokia
+        // upload
         await fileChooser.setFiles(filePath);
 
         // How to check that the file was uploaded successfully?
