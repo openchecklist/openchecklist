@@ -9,7 +9,7 @@ import { getRootDirectory } from "./getRootDirectory";
  */
 const useLocalDist = true;
 
-const mainPageUrl = "https://openchecklist.github.io/";
+const mainPageRootUrl = "https://openchecklist.github.io/";
 
 export async function navigateToMainPage(browser: Browser): Promise<Page> {
     // Create a separate browser context for each test
@@ -18,15 +18,21 @@ export async function navigateToMainPage(browser: Browser): Promise<Page> {
 
     // redirect to local data
     if (useLocalDist) {
-        // interceptor to replace content of the page
-        page.route(mainPageUrl, (route, request) => {
+        // interceptor to replace content of the page with local dist data
+        page.route(`${mainPageRootUrl}**/*`, (route, request) => {
+            const url = request.url();
+            let relativePath = url.substring(mainPageRootUrl.length);
+            if (relativePath.length === 0) {
+                relativePath = "index.html";
+            }
+
             route.fulfill({
-                body: getLocalDistIndexData(),
+                body: getLocalDistItemData(relativePath),
             });
         });
     }
 
-    await page.goto(mainPageUrl);
+    await page.goto(mainPageRootUrl);
 
     // Check that the page is the right one
     await expect(page).toHaveTitle("Checklist");
@@ -35,15 +41,21 @@ export async function navigateToMainPage(browser: Browser): Promise<Page> {
 }
 
 /**
- * Local generated page from build
+ * Local generated dist folder from build
  */
-const mainPageLocalDistDataPath = path.resolve(getRootDirectory(), "dist", "index.html");
+const localDistPath = path.resolve(getRootDirectory(), "dist");
 
-function getLocalDistIndexData() {
-    if (!fs.existsSync(mainPageLocalDistDataPath)) {
-        throw new Error(`cannot find mainPageLocalDistDataPath`);
+/**
+ * Get and item from the dist folder
+ * @param itemPathRelative relative path to the item in the local dist folder
+ * @returns
+ */
+function getLocalDistItemData(itemPathRelative: string) {
+    const itemPath = path.join(localDistPath, itemPathRelative);
+    if (!fs.existsSync(itemPath)) {
+        throw new Error(`cannot find ${itemPathRelative}`);
     }
 
-    const mainPageLocalDistData = fs.readFileSync(mainPageLocalDistDataPath);
-    return mainPageLocalDistData;
+    const itemData = fs.readFileSync(itemPath);
+    return itemData;
 }
